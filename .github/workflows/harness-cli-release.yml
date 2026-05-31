@@ -51,15 +51,23 @@ jobs:
           - platform: macos-arm64
             target: aarch64-apple-darwin
             runner: macos-15
+            artifact: harness-cli-macos-arm64
           - platform: macos-x64
             target: x86_64-apple-darwin
             runner: macos-15-intel
+            artifact: harness-cli-macos-x64
           - platform: linux-x64
             target: x86_64-unknown-linux-gnu
             runner: ubuntu-24.04
+            artifact: harness-cli-linux-x64
           - platform: linux-arm64
             target: aarch64-unknown-linux-gnu
             runner: ubuntu-24.04-arm
+            artifact: harness-cli-linux-arm64
+          - platform: windows-x64
+            target: x86_64-pc-windows-msvc
+            runner: windows-latest
+            artifact: harness-cli-windows-x64.exe
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -70,20 +78,27 @@ jobs:
           targets: ${{ matrix.target }}
 
       - name: Build release artifact
+        shell: bash
         run: scripts/build-harness-cli-release.sh --target "${{ matrix.target }}"
 
+      - name: Smoke PowerShell installer
+        if: ${{ matrix.platform == 'windows-x64' }}
+        shell: pwsh
+        run: .\scripts\install-harness.ps1 -DryRun -Directory "$env:RUNNER_TEMP\harness-install" -Yes
+
       - name: Smoke built CLI
+        shell: bash
         run: |
-          "dist/harness-cli-${{ matrix.platform }}" --help
-          "dist/harness-cli-${{ matrix.platform }}" score-trace --help
+          "dist/${{ matrix.artifact }}" --help
+          "dist/${{ matrix.artifact }}" score-trace --help
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: harness-cli-${{ matrix.platform }}
           path: |
-            dist/harness-cli-${{ matrix.platform }}
-            dist/harness-cli-${{ matrix.platform }}.sha256
+            dist/${{ matrix.artifact }}
+            dist/${{ matrix.artifact }}.sha256
           if-no-files-found: error
 
   publish:

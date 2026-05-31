@@ -144,15 +144,17 @@ copy_file() {
 merge_gitignore() {
   local target="$1"
   local marker="# Harness durable layer"
-  local rules="harness.db
+local rules="harness.db
 harness.db-wal
 harness.db-shm
-scripts/bin/harness-cli"
+scripts/bin/harness-cli
+scripts/bin/harness-cli.exe"
 
   if grep -Fxq "harness.db" "$target" &&
      grep -Fxq "harness.db-wal" "$target" &&
      grep -Fxq "harness.db-shm" "$target" &&
-     grep -Fxq "scripts/bin/harness-cli" "$target"; then
+     grep -Fxq "scripts/bin/harness-cli" "$target" &&
+     grep -Fxq "scripts/bin/harness-cli.exe" "$target"; then
     log "skip     .gitignore (harness rules already present)"
     SKIPPED=$((SKIPPED + 1))
     return
@@ -340,6 +342,7 @@ detect_cli_platform() {
     Darwin:x86_64) printf 'macos-x64' ;;
     Linux:x86_64)  printf 'linux-x64' ;;
     Linux:aarch64|Linux:arm64) printf 'linux-arm64' ;;
+    MINGW*:x86_64|MSYS*:x86_64|CYGWIN*:x86_64) printf 'windows-x64' ;;
     *)
       fail "Unsupported Harness CLI platform: $os/$arch."
       ;;
@@ -400,21 +403,29 @@ default_cli_base_url() {
 install_harness_cli_binary() {
   [ "$INSTALL_RUST_CLI" -eq 1 ] || return 0
 
-  local platform binary_name binary_url checksum_url target tmp_dir binary_tmp checksum_tmp expected actual
+  local platform binary_name binary_url checksum_url target target_label tmp_dir binary_tmp checksum_tmp expected actual
   platform="${HARNESS_CLI_PLATFORM:-$(detect_cli_platform)}"
   binary_name="harness-cli-$platform"
+  target="scripts/bin/harness-cli"
+  case "$platform" in
+    windows-*)
+      binary_name="$binary_name.exe"
+      target="scripts/bin/harness-cli.exe"
+      ;;
+  esac
   binary_url="$CLI_BASE_URL/$binary_name"
   checksum_url="$binary_url.sha256"
-  target="$TARGET_DIR/scripts/bin/harness-cli"
+  target_label="$target"
+  target="$TARGET_DIR/$target"
 
   if [ -e "$target" ] && [ "$CONFLICT_ACTION" = "merge" ] && [ "$FORCE" -eq 0 ]; then
-    log "skip     scripts/bin/harness-cli (merge keeps existing file)"
+    log "skip     $target_label (merge keeps existing file)"
     SKIPPED=$((SKIPPED + 1))
     return 0
   fi
 
   if [ "$DRY_RUN" -eq 1 ]; then
-    log "download $binary_name -> scripts/bin/harness-cli"
+    log "download $binary_name -> $target_label"
     log "verify   $binary_name.sha256"
     CREATED=$((CREATED + 1))
     return 0
@@ -441,19 +452,19 @@ install_harness_cli_binary() {
   if [ -e "$target" ]; then
     if [ "$FORCE" -eq 1 ]; then
       mkdir -p "$BACKUP_DIR/scripts/bin"
-      cp -p "$target" "$BACKUP_DIR/scripts/bin/harness-cli"
+      cp -p "$target" "$BACKUP_DIR/$target_label"
     fi
     UPDATED=$((UPDATED + 1))
-    log "updated  scripts/bin/harness-cli"
+    log "updated  $target_label"
   else
     CREATED=$((CREATED + 1))
-    log "created  scripts/bin/harness-cli"
+    log "created  $target_label"
   fi
 
   cp "$binary_tmp" "$target"
-  chmod 755 "$target"
+  chmod 755 "$target" 2>/dev/null || true
   rm -rf "$tmp_dir"
-  log "verified scripts/bin/harness-cli ($platform)"
+  log "verified $target_label ($platform)"
 }
 
 check_protected_target_paths() {

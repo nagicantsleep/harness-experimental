@@ -108,11 +108,21 @@ verifies its `.sha256` checksum, and installs it at
 `scripts/bin/harness-cli`. The Rust CLI is the main Harness tool and stable
 command path.
 
+On Windows, use the PowerShell installer and the `.exe` command path after a
+release includes the Windows x64 asset:
+
+```powershell
+Invoke-WebRequest "https://raw.githubusercontent.com/hoangnb24/harness-experimental/main/scripts/install-harness.ps1" -OutFile install-harness.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\install-harness.ps1 -Directory . -Yes
+.\scripts\bin\harness-cli.exe query matrix
+```
+
 Harness CLI release assets are published from tags by the
 `Harness CLI Release` GitHub Actions workflow. The installer expects each
 release to include `harness-cli-<platform>` and
 `harness-cli-<platform>.sha256` assets for macOS arm64, macOS x64, Linux x64,
-and Linux arm64.
+Linux arm64, and `harness-cli-windows-x64.exe` plus
+`harness-cli-windows-x64.exe.sha256` for Windows x64.
 
 ## Try The Flow
 

@@ -110,6 +110,16 @@ by the installer through `scripts/harness-cli-release-tag`; Phase 3 pins
 point at an alternate artifact directory, such as a local `file:///.../dist`
 directory created by `scripts/build-harness-cli-release.sh`.
 
+Windows users should use the PowerShell installer after a release includes the
+Windows x64 asset. It downloads the artifact, verifies its checksum, and installs
+it at `scripts/bin/harness-cli.exe`:
+
+```powershell
+Invoke-WebRequest "https://raw.githubusercontent.com/hoangnb24/harness-experimental/main/scripts/install-harness.ps1" -OutFile install-harness.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\install-harness.ps1 -Directory . -Yes
+.\scripts\bin\harness-cli.exe init
+```
+
 ## Schema Migrations
 
 Migration files live under `scripts/schema/` and are named `NNN-description.sql`
@@ -146,12 +156,15 @@ scripts/build-harness-cli-release.sh
 ```
 
 The script writes `dist/harness-cli-<platform>` and
-`dist/harness-cli-<platform>.sha256`. Supported labels are:
+`dist/harness-cli-<platform>.sha256`. For Windows it writes
+`dist/harness-cli-windows-x64.exe` and
+`dist/harness-cli-windows-x64.exe.sha256`. Supported labels are:
 
 - `macos-arm64`
 - `macos-x64`
 - `linux-x64`
 - `linux-arm64`
+- `windows-x64`
 
 For cross-compilation, pass a Cargo target triple:
 
@@ -172,3 +185,5 @@ native hosted runners, and upload these release assets:
 - `harness-cli-linux-x64.sha256`
 - `harness-cli-linux-arm64`
 - `harness-cli-linux-arm64.sha256`
+- `harness-cli-windows-x64.exe`
+- `harness-cli-windows-x64.exe.sha256`

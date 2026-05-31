@@ -29,6 +29,12 @@ The command path for users and agents is the installed Rust binary:
 scripts/bin/harness-cli <command>
 ```
 
+On Windows, the repository-local command path is the native executable:
+
+```powershell
+.\scripts\bin\harness-cli.exe <command>
+```
+
 The installer should download, verify, and install the platform-specific Rust
 binary directly at that path. There should be no shell wrapper command contract.
 
@@ -60,6 +66,8 @@ Positive:
 - The durable-layer CLI can move to typed command parsing and tested use cases.
 - Target projects do not need a Rust toolchain just to use Harness.
 - The `scripts/bin/harness-cli` command is the stable entrypoint for agents.
+- Windows agents can use `scripts/bin/harness-cli.exe` from PowerShell without
+  WSL or Git Bash.
 - Prebuilt releases can include a known SQLite linkage strategy.
 
 Tradeoffs:

@@ -518,9 +518,7 @@ impl HarnessRepository for SqliteHarnessRepository {
             .filter(|value| !value.is_empty())
             .ok_or_else(|| HarnessInfraError::MissingDecisionVerifyCommand(id.to_owned()))?;
 
-        let status = Command::new("sh")
-            .arg("-c")
-            .arg(&verify_command)
+        let status = platform_shell_command(&verify_command)
             .current_dir(&self.repo_root)
             .status()?;
         let result = if status.success() { "pass" } else { "fail" }.to_owned();
@@ -848,6 +846,23 @@ impl HarnessRepository for SqliteHarnessRepository {
             headers,
             rows: collect_rows(rows)?,
         })
+    }
+}
+
+fn platform_shell_command(command: &str) -> Command {
+    #[cfg(windows)]
+    {
+        let shell = std::env::var_os("COMSPEC").unwrap_or_else(|| "cmd.exe".into());
+        let mut process = Command::new(shell);
+        process.arg("/C").arg(command);
+        process
+    }
+
+    #[cfg(not(windows))]
+    {
+        let mut process = Command::new("sh");
+        process.arg("-c").arg(command);
+        process
     }
 }
 
@@ -1205,13 +1220,17 @@ mod tests {
         repository.init().unwrap();
 
         let pwd_output = temp_dir.path().join("verify-pwd.txt");
+        #[cfg(windows)]
+        let verify_command = format!("cd > {}", pwd_output.display());
+        #[cfg(not(windows))]
+        let verify_command = format!("pwd > {}", pwd_output.display());
         repository
             .add_decision(DecisionAddInput {
                 id: "0001-test".to_owned(),
                 title: "Verify from root".to_owned(),
                 status: "accepted".to_owned(),
                 doc_path: None,
-                verify_command: Some(format!("pwd > {}", pwd_output.display())),
+                verify_command: Some(verify_command),
                 predicted_impact: None,
                 notes: None,
             })

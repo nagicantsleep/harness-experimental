@@ -17,6 +17,8 @@ The produced files are:
 
   dist/harness-cli-<platform>
   dist/harness-cli-<platform>.sha256
+  dist/harness-cli-windows-x64.exe
+  dist/harness-cli-windows-x64.exe.sha256
 
 Supported platform labels:
 
@@ -24,6 +26,7 @@ Supported platform labels:
   x86_64-apple-darwin       -> macos-x64
   x86_64-unknown-linux-gnu  -> linux-x64
   aarch64-unknown-linux-gnu -> linux-arm64
+  x86_64-pc-windows-msvc    -> windows-x64
 EOF
 }
 
@@ -66,12 +69,20 @@ done
 
 if [ -n "$target" ]; then
   cargo_args=(build --package harness-cli --profile "$profile" --target "$target")
-  binary="$repo_root/target/$target/$profile/harness-cli"
+  binary_name="harness-cli"
+  case "$target" in
+    *-windows-*) binary_name="harness-cli.exe" ;;
+  esac
+  binary="$repo_root/target/$target/$profile/$binary_name"
   triple="$target"
 else
-  cargo_args=(build --package harness-cli --profile "$profile")
-  binary="$repo_root/target/$profile/harness-cli"
   triple="$(rustc -vV | awk '/^host:/ { print $2 }')"
+  binary_name="harness-cli"
+  case "$triple" in
+    *-windows-*) binary_name="harness-cli.exe" ;;
+  esac
+  cargo_args=(build --package harness-cli --profile "$profile")
+  binary="$repo_root/target/$profile/$binary_name"
 fi
 
 case "$triple" in
@@ -79,6 +90,7 @@ case "$triple" in
   x86_64-apple-darwin) platform="macos-x64" ;;
   x86_64-unknown-linux-gnu) platform="linux-x64" ;;
   aarch64-unknown-linux-gnu) platform="linux-arm64" ;;
+  x86_64-pc-windows-msvc) platform="windows-x64" ;;
   *) fail "Unsupported release target: $triple" ;;
 esac
 
@@ -87,12 +99,15 @@ esac
   cargo "${cargo_args[@]}"
 )
 
-[ -x "$binary" ] || fail "Expected compiled binary missing: $binary"
+[ -f "$binary" ] || fail "Expected compiled binary missing: $binary"
 
 mkdir -p "$out_dir"
 artifact="$out_dir/harness-cli-$platform"
+case "$triple" in
+  *-windows-*) artifact="$artifact.exe" ;;
+esac
 cp "$binary" "$artifact"
-chmod 755 "$artifact"
+chmod 755 "$artifact" 2>/dev/null || true
 
 if command -v shasum >/dev/null 2>&1; then
   (cd "$out_dir" && shasum -a 256 "$(basename "$artifact")" > "$(basename "$artifact").sha256")
