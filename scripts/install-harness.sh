@@ -35,9 +35,9 @@ Examples:
   scripts/install-harness.sh
   scripts/install-harness.sh --directory /path/to/project --yes
   scripts/install-harness.sh ./my-project --force
-  curl -fsSL https://raw.githubusercontent.com/hoangnb24/harness-experimental/main/scripts/install-harness.sh | bash -s -- --yes
-  curl -fsSL https://raw.githubusercontent.com/hoangnb24/harness-experimental/main/scripts/install-harness.sh | bash -s -- --merge --yes
-  curl -fsSL https://raw.githubusercontent.com/hoangnb24/harness-experimental/main/scripts/install-harness.sh | bash -s -- --merge --refresh-agent-shim --yes
+  curl -fsSL https://raw.githubusercontent.com/nagicantsleep/harness-experimental/main/scripts/install-harness.sh | bash -s -- --yes
+  curl -fsSL https://raw.githubusercontent.com/nagicantsleep/harness-experimental/main/scripts/install-harness.sh | bash -s -- --merge --yes
+  curl -fsSL https://raw.githubusercontent.com/nagicantsleep/harness-experimental/main/scripts/install-harness.sh | bash -s -- --merge --refresh-agent-shim --yes
 EOF
 }
 
@@ -394,9 +394,9 @@ default_cli_base_url() {
   fi
 
   if [ -n "$release_tag" ] && [ "$release_tag" != "latest" ]; then
-    printf 'https://github.com/hoangnb24/harness-experimental/releases/download/%s\n' "$release_tag"
+    printf 'https://github.com/nagicantsleep/harness-experimental/releases/download/%s\n' "$release_tag"
   else
-    printf 'https://github.com/hoangnb24/harness-experimental/releases/latest/download\n'
+    printf 'https://github.com/nagicantsleep/harness-experimental/releases/latest/download\n'
   fi
 }
 
@@ -631,7 +631,7 @@ SCRIPT_PATH="${BASH_SOURCE[0]:-$0}"
 SCRIPT_DIR="$(cd "$(dirname "$SCRIPT_PATH")" 2>/dev/null && pwd -P || printf '')"
 SOURCE_ROOT=""
 SOURCE_MODE="remote"
-SOURCE_BASE_URL="${HARNESS_SOURCE_BASE_URL:-https://raw.githubusercontent.com/hoangnb24/harness-experimental/main}"
+SOURCE_BASE_URL="${HARNESS_SOURCE_BASE_URL:-https://raw.githubusercontent.com/nagicantsleep/harness-experimental/main}"
 SOURCE_BASE_URL="${SOURCE_BASE_URL%/}"
 CLI_BASE_URL="${HARNESS_CLI_BASE_URL:-}"
 CLI_BASE_URL="${CLI_BASE_URL%/}"

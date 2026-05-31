@@ -62,60 +62,95 @@ https://openai.com/index/harness-engineering/
 
 ## Install Harness Into A Project
 
-From a target project directory, run:
+### macOS / Linux
+
+From a target project directory, run the Bash installer:
 
 ```bash
-curl -fsSL "https://raw.githubusercontent.com/hoangnb24/harness-experimental/main/scripts/install-harness.sh?$(date +%s)" | bash -s -- --yes
+curl -fsSL "https://raw.githubusercontent.com/nagicantsleep/harness-experimental/main/scripts/install-harness.sh?$(date +%s)" | bash -s -- --yes
 ```
 
-If the target already has `AGENTS.md`, `docs/`, or `scripts/`, choose one:
+If the target already has `AGENTS.md`, `docs/`, or `scripts/`, choose one of
+the same conflict modes:
 
 ```bash
 # Update an existing Harness repo without moving existing files
-curl -fsSL "https://raw.githubusercontent.com/hoangnb24/harness-experimental/main/scripts/install-harness.sh?$(date +%s)" | bash -s -- --merge --yes
+curl -fsSL "https://raw.githubusercontent.com/nagicantsleep/harness-experimental/main/scripts/install-harness.sh?$(date +%s)" | bash -s -- --merge --yes
 
 # Back up and replace AGENTS.md, docs/, and scripts/
-curl -fsSL "https://raw.githubusercontent.com/hoangnb24/harness-experimental/main/scripts/install-harness.sh?$(date +%s)" | bash -s -- --override --yes
+curl -fsSL "https://raw.githubusercontent.com/nagicantsleep/harness-experimental/main/scripts/install-harness.sh?$(date +%s)" | bash -s -- --override --yes
 ```
-
-Use `--merge` when a project already has Harness and you want to append newly
-added Harness files without moving the existing `AGENTS.md`, `docs/`, or
-`scripts/` paths into backup. Existing files stay untouched; only missing
-Harness files are created.
 
 For older Harness installs whose `AGENTS.md` still contains the full generated
 operating guide, refresh it into the small stable shim:
 
 ```bash
-curl -fsSL "https://raw.githubusercontent.com/hoangnb24/harness-experimental/main/scripts/install-harness.sh?$(date +%s)" | bash -s -- --merge --refresh-agent-shim --yes
+curl -fsSL "https://raw.githubusercontent.com/nagicantsleep/harness-experimental/main/scripts/install-harness.sh?$(date +%s)" | bash -s -- --merge --refresh-agent-shim --yes
 ```
-
-The refresh backs up the existing file. If it detects the old
-Harness-generated guide, it replaces it with the shim. If the file appears
-custom, it appends or updates a marked Harness block instead of overwriting the
-project's local instructions.
 
 Or install into a specific path:
 
 ```bash
-curl -fsSL "https://raw.githubusercontent.com/hoangnb24/harness-experimental/main/scripts/install-harness.sh?$(date +%s)" | bash -s -- --directory /path/to/project --yes
+curl -fsSL "https://raw.githubusercontent.com/nagicantsleep/harness-experimental/main/scripts/install-harness.sh?$(date +%s)" | bash -s -- --directory /path/to/project --yes
 ```
 
-Use `--dry-run` to preview changes before writing files.
+Use `--dry-run` to preview changes before writing files. The installed CLI path
+is:
+
+```bash
+scripts/bin/harness-cli query matrix
+```
+
+### Windows
+
+From a target project directory, download and run the PowerShell installer:
+
+```powershell
+Invoke-WebRequest "https://raw.githubusercontent.com/nagicantsleep/harness-experimental/main/scripts/install-harness.ps1" -OutFile install-harness.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File .\install-harness.ps1 -Directory . -Yes
+```
+
+If the target already has `AGENTS.md`, `docs\`, or `scripts\`, choose one of
+the same conflict modes:
+
+```powershell
+# Update an existing Harness repo without moving existing files
+powershell -NoProfile -ExecutionPolicy Bypass -File .\install-harness.ps1 -Directory . -Merge -Yes
+
+# Back up and replace existing Harness files before writing new ones
+powershell -NoProfile -ExecutionPolicy Bypass -File .\install-harness.ps1 -Directory . -Force -Yes
+```
+
+Or install into a specific path:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File .\install-harness.ps1 -Directory C:\path\to\project -Yes
+```
+
+Use `-DryRun` to preview changes before writing files. The installed CLI path
+is:
+
+```powershell
+.\scripts\bin\harness-cli.exe query matrix
+```
+
+### Installer Notes
+
+Use merge mode when a project already has Harness and you want to append newly
+added Harness files without moving the existing `AGENTS.md`, `docs/`, or
+`scripts/` paths into backup. Existing files stay untouched; only missing
+Harness files are created.
+
+The agent-shim refresh backs up the existing file. If it detects the old
+Harness-generated guide, it replaces it with the shim. If the file appears
+custom, it appends or updates a marked Harness block instead of overwriting the
+project's local instructions. This refresh is currently implemented by the
+macOS/Linux Bash installer.
 
 The installer also downloads the prebuilt Harness CLI for the current platform,
 verifies its `.sha256` checksum, and installs it at
-`scripts/bin/harness-cli`. The Rust CLI is the main Harness tool and stable
-command path.
-
-On Windows, use the PowerShell installer and the `.exe` command path after a
-release includes the Windows x64 asset:
-
-```powershell
-Invoke-WebRequest "https://raw.githubusercontent.com/hoangnb24/harness-experimental/main/scripts/install-harness.ps1" -OutFile install-harness.ps1
-powershell -NoProfile -ExecutionPolicy Bypass -File .\install-harness.ps1 -Directory . -Yes
-.\scripts\bin\harness-cli.exe query matrix
-```
+`scripts/bin/harness-cli` on macOS/Linux or `scripts/bin/harness-cli.exe` on
+Windows. The Rust CLI is the main Harness tool and stable command path.
 
 Harness CLI release assets are published from tags by the
 `Harness CLI Release` GitHub Actions workflow. The installer expects each

@@ -79,15 +79,15 @@ shim. Use `--override` only when replacing the protected Harness surface is
 intentional.
 
 ```bash
-curl -fsSL "https://raw.githubusercontent.com/hoangnb24/harness-experimental/main/scripts/install-harness.sh?$(date +%s)" | bash -s -- --yes
+curl -fsSL "https://raw.githubusercontent.com/nagicantsleep/harness-experimental/main/scripts/install-harness.sh?$(date +%s)" | bash -s -- --yes
 ```
 
 ```bash
-curl -fsSL "https://raw.githubusercontent.com/hoangnb24/harness-experimental/main/scripts/install-harness.sh?$(date +%s)" | bash -s -- --merge --yes
+curl -fsSL "https://raw.githubusercontent.com/nagicantsleep/harness-experimental/main/scripts/install-harness.sh?$(date +%s)" | bash -s -- --merge --yes
 ```
 
 ```bash
-curl -fsSL "https://raw.githubusercontent.com/hoangnb24/harness-experimental/main/scripts/install-harness.sh?$(date +%s)" | bash -s -- --merge --refresh-agent-shim --yes
+curl -fsSL "https://raw.githubusercontent.com/nagicantsleep/harness-experimental/main/scripts/install-harness.sh?$(date +%s)" | bash -s -- --merge --refresh-agent-shim --yes
 ```
 
 `--refresh-agent-shim` backs up `AGENTS.md` before changing it. If the existing
@@ -115,7 +115,7 @@ Windows x64 asset. It downloads the artifact, verifies its checksum, and install
 it at `scripts/bin/harness-cli.exe`:
 
 ```powershell
-Invoke-WebRequest "https://raw.githubusercontent.com/hoangnb24/harness-experimental/main/scripts/install-harness.ps1" -OutFile install-harness.ps1
+Invoke-WebRequest "https://raw.githubusercontent.com/nagicantsleep/harness-experimental/main/scripts/install-harness.ps1" -OutFile install-harness.ps1
 powershell -NoProfile -ExecutionPolicy Bypass -File .\install-harness.ps1 -Directory . -Yes
 .\scripts\bin\harness-cli.exe init
 ```

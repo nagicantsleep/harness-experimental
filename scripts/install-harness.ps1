@@ -205,16 +205,16 @@ function Install-HarnessCliBinary {
 
 $SourceRoot = Get-SourceRoot
 if (-not $SourceBaseUrl) {
-    $SourceBaseUrl = "https://raw.githubusercontent.com/hoangnb24/harness-experimental/main"
+    $SourceBaseUrl = "https://raw.githubusercontent.com/nagicantsleep/harness-experimental/main"
 }
 $SourceBaseUrl = $SourceBaseUrl.TrimEnd("/")
 
 if (-not $CliBaseUrl) {
     $tag = Get-ReleaseTag $SourceRoot $SourceBaseUrl
     if ($tag -and $tag -ne "latest") {
-        $CliBaseUrl = "https://github.com/hoangnb24/harness-experimental/releases/download/$tag"
+        $CliBaseUrl = "https://github.com/nagicantsleep/harness-experimental/releases/download/$tag"
     } else {
-        $CliBaseUrl = "https://github.com/hoangnb24/harness-experimental/releases/latest/download"
+        $CliBaseUrl = "https://github.com/nagicantsleep/harness-experimental/releases/latest/download"
     }
 }
 $CliBaseUrl = $CliBaseUrl.TrimEnd("/")
