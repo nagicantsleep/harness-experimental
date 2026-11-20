@@ -79,6 +79,7 @@ for legacy in \
 done
 ! grep -Fxq 'harness.db' "$fresh/.gitignore"
 [[ ! -e "$fresh/.agents/skills/engineering-wisdom" ]]
+[[ ! -e "$fresh/.agents/skills/guardrails" ]]
 
 # Engineering wisdom remains explicit-only.
 wisdom="$temp/wisdom"

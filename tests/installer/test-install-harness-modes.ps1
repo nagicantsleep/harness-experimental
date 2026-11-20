@@ -74,6 +74,7 @@ try {
         if (Test-Path (Join-Path $Fresh $Legacy)) { throw "core install created legacy artifact $Legacy" }
     }
     if (Test-Path (Join-Path $Fresh ".agents/skills/engineering-wisdom")) { throw "core implicitly installed engineering wisdom" }
+    if (Test-Path (Join-Path $Fresh ".agents/skills/guardrails")) { throw "core implicitly installed guardrails" }
 
     # Engineering wisdom remains explicit-only.
     $Wisdom = Join-Path $Temp "wisdom"
@@ -81,6 +82,15 @@ try {
     if (!(Test-Path (Join-Path $Wisdom ".agents/skills/engineering-wisdom/SKILL.md"))) { throw "explicit engineering wisdom skill missing" }
     $WisdomAgent = Get-Content -Raw (Join-Path $Wisdom ".agents/skills/engineering-wisdom/agents/openai.yaml")
     if (!$WisdomAgent.Contains("allow_implicit_invocation: false")) { throw "engineering wisdom is not explicit-only" }
+
+    # Guardrails remains explicit-only.
+    $Guardrails = Join-Path $Temp "guardrails"
+    Invoke-Install $Guardrails @("WithGuardrails")
+    if (!(Test-Path (Join-Path $Guardrails ".agents/skills/guardrails/SKILL.md"))) { throw "explicit guardrails skill missing" }
+    $GuardrailsAgent = Get-Content -Raw (Join-Path $Guardrails ".agents/skills/guardrails/agents/openai.yaml")
+    if (!$GuardrailsAgent.Contains("allow_implicit_invocation: false")) { throw "guardrails is not explicit-only" }
+    if (!(Test-Path (Join-Path $Guardrails "docs/templates/rule-table.md"))) { throw "guardrails rule-table template missing" }
+    if (!(Test-Path (Join-Path $Guardrails ".agents/skills/guardrails/tools/check_architecture.py"))) { throw "guardrails architecture gate missing" }
 
     # Force overwrites an opted-in advisory file and backs up the old bytes.
     $Force = Join-Path $Temp "force"

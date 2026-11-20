@@ -37,7 +37,18 @@ for path in "${positive_paths[@]}"; do
   fi
 done
 
-for unrelated in docs/HARNESS.md README.md docs/research/application-legibility.md; do
+for unrelated in \
+  docs/HARNESS.md \
+  README.md \
+  docs/research/application-legibility.md \
+  .agents/skills/engineering-wisdom/SKILL.md \
+  .agents/skills/guardrails/SKILL.md \
+  .agents/skills/guardrails/tools/check_architecture.py \
+  scripts/engineering-wisdom-install-files.txt \
+  scripts/guardrails-install-files.txt \
+  docs/templates/rule-table.md \
+  docs/templates/verify-app-skill.md \
+  docs/decisions/0029-guardrails-opt-in-payload.md; do
   if printf '%s\n' "$unrelated" | "$classifier"; then
     echo "unrelated path triggered Harness core publication: $unrelated" >&2
     exit 1

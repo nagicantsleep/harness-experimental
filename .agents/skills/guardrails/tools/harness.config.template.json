@@ -1,0 +1,68 @@
+{
+  "_comment": "Copy to the consumer repository root as harness.config.json and adapt. Every layer and banned rule MUST include a 'fix' field; the checker refuses to start without one.",
+  "baseline": ".harness/baseline.json",
+  "exclude": [
+    "**/node_modules",
+    "**/__pycache__",
+    "**/.git",
+    "**/target",
+    "**/dist",
+    "**/build",
+    "**/.venv"
+  ],
+  "aliases": {
+    "@/": "src/"
+  },
+  "layers": [
+    {
+      "name": "domain",
+      "paths": ["src/domain/"],
+      "namespaces": ["App.Domain"],
+      "must_not_import": ["infra", "ui"],
+      "fix": "Define an interface or port in the domain layer. Implement it in infra and wire it at the composition root."
+    },
+    {
+      "name": "infra",
+      "paths": ["src/infra/"],
+      "namespaces": ["App.Infra"],
+      "may_import": ["domain"],
+      "fix": "Infrastructure may depend on domain. Move UI concerns out of infra."
+    },
+    {
+      "name": "ui",
+      "paths": ["src/ui/"],
+      "namespaces": ["App.UI"],
+      "may_import": ["domain"],
+      "must_not_import": ["infra"],
+      "fix": "UI must not import infra. Depend on domain ports and wire implementations at the composition root."
+    }
+  ],
+  "banned": [
+    {
+      "id": "no-timer-sleep",
+      "globs": ["**/*.{ts,tsx,js,jsx,py,cs,go,gd}"],
+      "except": ["**/framework/**", "**/test/**", "**/tests/**"],
+      "regex": "(?i)\\b(setTimeout|setInterval|requestAnimationFrame|requestIdleCallback|time\\.sleep|Thread\\.Sleep|time\\.Sleep|create_timer)\\b",
+      "message": "Timers and sleep patch over timing problems and spread by copy-paste.",
+      "fix": "Subscribe to the event that signals the state, or model the wait as a state-machine transition."
+    }
+  ],
+  "comments": {
+    "mode": "justify-only",
+    "globs": ["**/*.{ts,tsx,js,jsx,py,cs,go,gd,rs}"],
+    "justifying_regex": "(?i)\\b(hack|workaround|temporary|temp fix|for now|fine for now|do not remove|don't remove|too risky|because \\w+ (said|asked|told)|legacy reasons|quick fix)\\b",
+    "fix": "Delete the comment. If the code needs explaining, rename the symbol, extract a function, or encode the invariant in a type. If the code is a workaround, fix the root cause instead of documenting it.",
+    "allow_regex": [
+      "(?i)spdx-license-identifier",
+      "(?i)https?://\\S+",
+      "(?i)\\b(TODO|FIXME|NOTE):\\s*#"
+    ],
+    "license_header_lines": 15
+  },
+  "suppressions": {
+    "globs": ["**/*.{ts,tsx,js,jsx,py,cs,gd}"],
+    "regex": "(?i)(eslint-disable|@ts-ignore|@ts-expect-error|#\\s*noqa|#\\s*type:\\s*ignore|#pragma\\s+warning\\s+disable|@warning_ignore)",
+    "allowed_if": "(?:https?://\\S+|\\b[A-Z][A-Z0-9]+-\\d+\\b|#\\d+)",
+    "fix": "Remove the suppression and fix the underlying finding. If the rule is wrong, change the rule config in a reviewed PR; if it cannot be fixed now, add a ticket id on the same line."
+  }
+}

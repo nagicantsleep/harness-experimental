@@ -1,0 +1,16 @@
+# Optional explicit-only guardrails add-on.
+# This manifest is intentionally absent from the default core manifest.
+.agents/skills/guardrails/SKILL.md
+.agents/skills/guardrails/agents/openai.yaml
+.agents/skills/guardrails/references/inverted-pyramid.md
+.agents/skills/guardrails/references/architecture-lint.md
+.agents/skills/guardrails/references/verification-design.md
+.agents/skills/guardrails/references/evolution-loop.md
+.agents/skills/guardrails/tools/check_architecture.py
+.agents/skills/guardrails/tools/harness.config.template.json
+docs/templates/rule-table.md
+docs/templates/feature-map-index.md
+docs/templates/feature-map-entry.md
+docs/templates/verify-app-skill.md
+docs/templates/skill-eval-rubric.md
+docs/templates/pr-verification-checklist.md

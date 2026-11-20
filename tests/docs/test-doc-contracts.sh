@@ -32,6 +32,12 @@ current_files=(
   docs/templates/decision.md
   docs/templates/exec-plan.md
   docs/templates/harness-improvement.md
+  docs/templates/rule-table.md
+  docs/templates/feature-map-index.md
+  docs/templates/feature-map-entry.md
+  docs/templates/verify-app-skill.md
+  docs/templates/skill-eval-rubric.md
+  docs/templates/pr-verification-checklist.md
   docs/decisions/0019-repository-centered-default-workflow.md
   docs/decisions/0020-installation-profile-and-knowledge-boundaries.md
   docs/decisions/0024-rust-harness-core-maintenance-cli.md
@@ -39,6 +45,7 @@ current_files=(
   docs/decisions/0026-explicit-onboarding-skills-in-default-core.md
   docs/decisions/0027-end-protocol-v1-and-focus-repository-protocol.md
   docs/decisions/0028-authoritative-invariant-encoding.md
+  docs/decisions/0029-guardrails-opt-in-payload.md
   docs/research/application-legibility.md
   .github/ISSUE_TEMPLATE/real-world-example.md
 )
