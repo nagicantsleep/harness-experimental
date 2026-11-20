@@ -23,6 +23,8 @@ tests/installer/assert-agent-authority-contract.sh
 tests/installer/assert-install-manifest-links.sh
 tests/installer/test-install-harness-modes.sh
 tests/installer/test-engineering-wisdom-opt-in.sh
+tests/installer/test-guardrails-opt-in.sh
+python3 -m unittest discover -s tests/guardrails -p 'test_*.py'
 tests/docs/test-doc-contracts.sh
 tests/workflow/test-repository-workflow.sh
 tests/maintenance/test-harness-release-classification.sh

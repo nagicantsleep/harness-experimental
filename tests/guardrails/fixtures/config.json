@@ -1,0 +1,16 @@
+{
+  "aliases": {"@/": "src/"},
+  "layers": [
+    {"name": "domain", "paths": ["src/domain"], "namespaces": ["App.Domain"], "must_not_import": ["infra", "ui"], "fix": "domain is pure: move IO behind an interface owned by domain and implement it in infra."},
+    {"name": "infra", "paths": ["src/infra"], "namespaces": ["App.Infra"], "must_not_import": ["ui"], "fix": "infra must not know about ui."},
+    {"name": "ui", "paths": ["src/ui"], "namespaces": ["App.Ui"], "may_import": ["domain"], "fix": "ui talks to domain only."},
+    {"name": "gcore", "paths": ["game/core"], "must_not_import": ["gscenes"], "fix": "core must not preload scene scripts; emit a signal instead."},
+    {"name": "gscenes", "paths": ["game/scenes"], "fix": "none"}
+  ],
+  "banned": [
+    {"id": "no-set-timeout", "regex": "\\bsetTimeout\\(", "globs": ["src/**/*.ts"], "message": "setTimeout used to wait for state.", "fix": "Subscribe to the store event or model the wait as a state machine transition."}
+  ],
+  "suppressions": {"regex": "eslint-disable|@ts-ignore|# noqa|pragma warning disable", "globs": ["src/**", "game/**"]},
+  "comments": {"mode": "strict", "globs": ["src/**", "game/**"], "allow_regex": ["^\\s*///", "^\\s*/\\*\\*", "^\\s*##", "https?://", "#\\d+", "[A-Z]{2,}-\\d+"]},
+  "baseline": ".harness/baseline.json"
+}

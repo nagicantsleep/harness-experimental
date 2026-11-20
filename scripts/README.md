@@ -14,6 +14,8 @@ scripts/validate-premerge.sh
 - `harness-install-files.txt`: exact embedded core payload.
 - `engineering-wisdom-install-files.txt`: independent optional advisory
   payload.
+- `guardrails-install-files.txt`: independent optional guardrails payload
+  (architecture gate, verification templates, evolution loop).
 - `agent-harness-block.md` and `claude-harness-block.md`: managed entrypoint
   shims.
 

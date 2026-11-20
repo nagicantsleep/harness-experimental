@@ -96,7 +96,7 @@ while IFS= read -r metadata; do
       grep -Fq 'Use only when the user explicitly invokes' "$root/$skill"
       ;;
   esac
-done < <(cat "$root/scripts/harness-install-files.txt" "$root/scripts/engineering-wisdom-install-files.txt")
+done < <(cat "$root/scripts/harness-install-files.txt" "$root/scripts/engineering-wisdom-install-files.txt" "$root/scripts/guardrails-install-files.txt")
 
 invariant_skill="$root/.agents/skills/encode-invariant/SKILL.md"
 grep -Fq 'Do not infer policy from conventions, code patterns, tests, defaults, or undocumented preferences.' \
@@ -126,11 +126,13 @@ grep -Fq 'read_source_text "scripts/agent-harness-block.md"' "$root/scripts/inst
 grep -Fq 'read_source_text "scripts/claude-harness-block.md"' "$root/scripts/install-harness.sh"
 grep -Fq 'REFRESH_AGENT_SHIM=1' "$root/scripts/install-harness.sh"
 grep -Fq 'ENGINEERING_WISDOM_PAYLOAD_MANIFEST="scripts/engineering-wisdom-install-files.txt"' "$root/scripts/install-harness.sh"
+grep -Fq 'GUARDRAILS_PAYLOAD_MANIFEST="scripts/guardrails-install-files.txt"' "$root/scripts/install-harness.sh"
 ! grep -Fq 'CLI_PAYLOAD_MANIFEST' "$root/scripts/install-harness.sh"
 
 grep -Fq 'Read-SourceText "scripts/agent-harness-block.md"' "$root/scripts/install-harness.ps1"
 grep -Fq '[switch]$RefreshAgentShim' "$root/scripts/install-harness.ps1"
 grep -Fq '$script:EngineeringWisdomPayloadManifest = "scripts/engineering-wisdom-install-files.txt"' "$root/scripts/install-harness.ps1"
+grep -Fq '$script:GuardrailsPayloadManifest = "scripts/guardrails-install-files.txt"' "$root/scripts/install-harness.ps1"
 ! grep -Fq 'CliPayloadManifest' "$root/scripts/install-harness.ps1"
 
 echo "repository authority, explicit skill configuration, canonical shims, and installer parity passed"

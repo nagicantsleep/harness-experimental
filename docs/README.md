@@ -16,7 +16,8 @@ Start with the smallest authoritative surface.
   accepted architecture, reliability, security, and quality rules into native
   mechanical validation.
 - `templates/`: optional decision, plan, runbook, and Harness-improvement
-  structures.
+  structures. The guardrails opt-in adds Feature Map, verification, and
+  rule-table templates.
 
 ## Consumer-Owned Truth
 

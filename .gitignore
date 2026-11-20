@@ -1,12 +1,16 @@
-# macOS Finder metadata.
-.DS_Store
-
 # Rust build output for harness tooling.
-target/
+/target/
 dist/
 
 # Downloaded Harness binaries for installed project instances.
 scripts/bin/harness
 scripts/bin/harness.exe
 scripts/bin/harness-v0-migrate
+
+# Python bytecode from skill and gate tests.
+__pycache__/
+
+# macOS Finder metadata.
+.DS_Store
+
 harness.db.bk

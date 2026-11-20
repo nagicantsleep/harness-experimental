@@ -123,11 +123,16 @@ Harness improvement is also explicit and requires baseline-to-rerun evidence:
 $improve-harness
 ```
 
-Engineering advice is a separate opt-in payload:
+Engineering advice and guardrails are separate opt-in payloads:
 
 ```bash
 scripts/install-harness.sh --with-engineering-wisdom --yes /path/to/project
+scripts/install-harness.sh --with-guardrails --yes /path/to/project
 ```
+
+`--with-guardrails` adds an explicit-only skill with a stack-agnostic
+architecture gate (baseline ratchet), verification and Feature Map templates,
+skill-eval and evolution-loop checklists. See decision 0029.
 
 All Harness skills require explicit user invocation, including invariant
 encoding. No skill runs during installation or merely because a request

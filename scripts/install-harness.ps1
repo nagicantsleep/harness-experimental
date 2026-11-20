@@ -6,6 +6,7 @@ param(
     [switch]$Yes,
     [switch]$Merge,
     [switch]$WithEngineeringWisdom,
+    [switch]$WithGuardrails,
     [switch]$RefreshAgentShim,
     [switch]$Override,
     [switch]$Force,
@@ -346,6 +347,13 @@ function Install-EngineeringWisdom {
     }
 }
 
+function Install-Guardrails {
+    if (!$WithGuardrails) { return }
+    foreach ($file in (Get-PayloadFiles $script:GuardrailsPayloadManifest)) {
+        Copy-HarnessFile $file
+    }
+}
+
 $script:Created = 0
 $script:Updated = 0
 $script:Skipped = 0
@@ -354,6 +362,7 @@ $script:SourceBaseUrl = if ($env:HARNESS_SOURCE_BASE_URL) { $env:HARNESS_SOURCE_
 $script:CoreSourceBaseUrl = if ($env:HARNESS_CORE_SOURCE_BASE_URL) { $env:HARNESS_CORE_SOURCE_BASE_URL.TrimEnd("/") } else { "https://raw.githubusercontent.com/hoangnb24/repository-harness/main" }
 $script:PayloadManifest = "scripts/harness-install-files.txt"
 $script:EngineeringWisdomPayloadManifest = "scripts/engineering-wisdom-install-files.txt"
+$script:GuardrailsPayloadManifest = "scripts/guardrails-install-files.txt"
 $script:TargetDir = Resolve-TargetPath $Directory
 $script:BackupDir = Join-Path $script:TargetDir (".harness-backup/" + (Get-Date -Format "yyyyMMddHHmmss"))
 $script:ConflictAction = "install"
@@ -418,11 +427,17 @@ if ($WithEngineeringWisdom) {
 } else {
     Write-Step "Engineering wisdom: excluded"
 }
+if ($WithGuardrails) {
+    Write-Step "Guardrails: included (explicit opt-in)"
+} else {
+    Write-Step "Guardrails: excluded"
+}
 Write-Step "Target project: $script:TargetDir"
 
 Install-HarnessCore
 
 Install-EngineeringWisdom
+Install-Guardrails
 Refresh-AgentShimFile
 
 Write-Step ""

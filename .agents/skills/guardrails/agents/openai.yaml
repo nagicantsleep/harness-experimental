@@ -1,0 +1,6 @@
+interface:
+  display_name: "Guardrails"
+  short_description: "Bootstrap deterministic architecture gates, verification, and evolution loop"
+  default_prompt: "Use $guardrails to assess this repository and propose deterministic guards, a verification skill, and an evolution loop."
+policy:
+  allow_implicit_invocation: false

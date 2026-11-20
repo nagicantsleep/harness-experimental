@@ -37,8 +37,9 @@ Core does not install:
 - a database, schemas, orchestration, or background processes; or
 - upstream history, tests, CI, release scripts, and product decisions.
 
-The engineering-wisdom advisory skill is an independent explicit opt-in, not a
-second product profile. It stores no state and establishes no consumer policy.
+The engineering-wisdom advisory skill and the guardrails skill are independent
+explicit opt-ins, not second product profiles. They store no state and
+establish no consumer policy. See decisions 0026 and 0029.
 
 Installation and updates preserve unknown existing files. In particular, they
 do not automatically delete artifacts from the end-of-life compatibility
